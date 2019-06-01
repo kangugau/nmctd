@@ -548,7 +548,7 @@ void compileForSt(void)
 
   eat(KW_FOR);
   varType = compileLValue();
-  
+
   //eat(TK_IDENT);
 
   // check if the identifier is a variable
@@ -588,6 +588,10 @@ void compileArguments(ObjectNode *paramList)
 {
   //TODO: parse a list of arguments, check the consistency of the arguments and the given parameters
   ObjectNode *node = paramList;
+  if (node != NULL && lookAhead->tokenType != SB_LPAR)
+  {
+    error(ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+  }
 
   switch (lookAhead->tokenType)
   {
@@ -642,12 +646,9 @@ void compileCondition(void)
   // TODO: check the type consistency of LHS and RSH, check the basic type
   Type *type1;
   Type *type2;
-  TokenType op;
 
   type1 = compileExpression();
   checkBasicType(type1);
-
-  op = lookAhead->tokenType;
 
   switch (lookAhead->tokenType)
   {
